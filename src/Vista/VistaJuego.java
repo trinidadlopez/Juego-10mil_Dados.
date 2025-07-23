@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class VistaJuego extends Vista{
     public int solicitar_cantidad(){
+        System.out.println("Bienvenido al juego de dados 10mil!\n");
         System.out.println("Ingrese la cantidad de jugadores que van a jugar: ");
         Scanner scanner = new Scanner(System.in);
         int cantJugadores = scanner.nextInt();

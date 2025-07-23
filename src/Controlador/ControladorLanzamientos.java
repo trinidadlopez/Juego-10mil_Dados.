@@ -25,7 +25,7 @@ public class ControladorLanzamientos implements Observador{
             }
         }
         if(object.equals("NO TIENE DADOS CON PUNTOS")){
-            vistaLanzamientos.mostrarMensaje("Los dados lanzados no suman puntos. Su puntaje en esta ronda es de 0 puntos.");
+            vistaLanzamientos.mostrarMensaje("Los dados lanzados no suman puntos(1 o 5) ni forman con combinaciones o escalera. Su puntaje en esta ronda es de 0 puntos.");
         }
         if(object.equals("INFORMAR ESCALERA")){
             vistaLanzamientos.mostrarMensaje("Usted obtuvo una escalera! \n Tu puntaje en esta ronda fue de: 500 puntos! ");

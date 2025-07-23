@@ -12,6 +12,7 @@ public class Juego implements Observable{
     private ReglaPuntos puntaje;
     private Jugador jugadorActual;
     private ArrayList<Observador> observadores = new ArrayList<>();
+    private Reglas reglaBase = new Reglas();
 
     public Juego() {
     }
@@ -49,6 +50,7 @@ public class Juego implements Observable{
             notifyMessage("NOTIFICAR PUNTAJE TOTAL"); //System.out.println("Tu puntaje total, incluida esta partida, es de: " + jugadores.get(i).getPuntajeTotal() + " puntos\n" );
             i++; //para avanzar al siguiente turno
             i = i % jugadores.size();
+            actualizar_D_A();
             ganador_parcial=puntaje.determinar_quien_gano(jugadores);
         }
         System.out.println("El ganador del juego es: " + ganador_parcial.getNombreJugador());//notifyMessage("NOTIFICAR GANADOR")
@@ -82,6 +84,11 @@ public class Juego implements Observable{
                 jugadores.add(nuevoJugador);
             }
         }*/
+
+    private void actualizar_D_A(){ //me sirve para la clase abstracta y actualizar los dadosApartados
+        reglaBase.actualizar_dados_apartados(jugadorActual.getDadosApartados());
+    }
+
     @Override
     public void attach(Observador anObserver) {
         observadores.add(anObserver);

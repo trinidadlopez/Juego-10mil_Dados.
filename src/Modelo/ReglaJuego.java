@@ -2,11 +2,11 @@ package Modelo;
 
 import java.util.ArrayList;
 
-public class Reglas {
-    public int[] cantidadDados(ArrayList<Dado> dados){ //cuenta la cantidad de dados que hay de cada numero
+public class ReglaJuego extends Reglas {
+    /*public int[] cantidadDados(ArrayList<Dado> dados){ //cuenta la cantidad de dados que hay de cada numero
         int[] conteo = new int[7];
-        for(int i=0; i<dados.size(); i++){
-            int valorDado = dados.get(i).getValorCaraSuperior();
+        for(Dado d : dados){
+            int valorDado = d.getValorCaraSuperior();
             conteo[valorDado]++;
         }
         return conteo;
@@ -49,7 +49,7 @@ public class Reglas {
         return false;
 
     }
-
+*/
     public boolean tieneDadosConPuntos(ArrayList<Dado> dadosParciales){ //con esto puedo chequear que si el usuario me pide seguir, pueda.
         int[] conteo = cantidadDados(dadosParciales);
         if(tieneEscalera(conteo) || tieneTrio(conteo) || conteo[1]>0 || conteo[5]>0){
@@ -62,14 +62,13 @@ public class Reglas {
     public boolean verificar_si_puede_apartar(ArrayList<Dado> dadosApartados){
         int[] cantidad= cantidadDados(dadosApartados);
 
-        for(int i=0; i<dadosApartados.size(); i++){
-            int n = dadosApartados.get(i).getValorCaraSuperior();
-            if((n!=5 && n!=1 && cantidad[n] != 3)){
+        for (Dado dadosApartado : dadosApartados) {
+            int n = dadosApartado.getValorCaraSuperior();
+            if ((n != 5 && n != 1 && cantidad[n] != 3)) {
                 return false;
             }
         }
         return true;
     }
-
 
 }

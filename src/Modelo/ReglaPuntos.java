@@ -2,18 +2,17 @@ package Modelo;
 
 import java.util.ArrayList;
 
-public class ReglaPuntos {
-    private Reglas reglas = new Reglas(); //no se si hace falta
+public class ReglaPuntos extends Reglas {
 
     public int calcularPuntaje(ArrayList<Dado> dadosApartados){
-        int[] conteo = reglas.cantidadDados(dadosApartados);
+        int[] conteo = cantidadDados(dadosApartados);
         int puntos=0;
 
         if(conteo[1]==5){
             return 10000;
         }
 
-        if(reglas.tieneEscalera(conteo)){
+        if(tieneEscalera(conteo)){
             return 500;
         }
 
@@ -42,12 +41,15 @@ public class ReglaPuntos {
 
     public Jugador determinar_quien_gano(ArrayList<Jugador> jugadores){
         Jugador ganador=jugadores.get(0);
-        for(int i=0;i<jugadores.size();i++){
-            if(jugadores.get(i).getPuntajeTotal()>ganador.getPuntajeTotal()){
-                ganador=jugadores.get(i);
+        for(Jugador j : jugadores){
+            if(j.getPuntajeTotal()>ganador.getPuntajeTotal()){
+                ganador=j;
             }
         }
         return ganador;
     }
 
+
 }
+
+

@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class VistaLanzamientos extends Vista{
     public int pedir_opcion_deseada(){
-        System.out.println("Seleccione la opcion que desee: 1)Plantarse. 2)Apartar dados y seguir tirando.");
+        System.out.println("Seleccione la opcion que desee: 1)Plantarse: sumar puntos con los dados lanzados y pasar el turno. 2)Apartar dados y seguir tirando los dados restantes(los que no suman puntos).");
         Scanner scanner = new Scanner(System.in);
         int opcion = scanner.nextInt();
         return opcion;

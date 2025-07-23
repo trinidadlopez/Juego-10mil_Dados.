@@ -3,14 +3,14 @@ package Modelo;
 import Controlador.Observador;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Lanzamientos implements Observable{
     private ArrayList<Dado> dadosParciales; //fisicamente son los dados en mesa
     private final Cubilete cubilete;
     private Jugador jugadorActual;
-    private Reglas regla;
+    private ReglaJuego regla_juego;
     private ReglaPuntos regla_puntos;
+    private Reglas regla;
     private ArrayList<Observador> observadores = new ArrayList<>();
     private int opcion_seleccionada;
     private ArrayList<Integer> indices = new ArrayList<>();
@@ -24,7 +24,7 @@ public class Lanzamientos implements Observable{
     public void lanzar(){
         dadosParciales = new ArrayList<>(); //reinicio la lista de dadosParciales
         for(int i=0;i<cubilete.getDados().size();i++){
-            if(jugadorActual.getDadosApartados().contains(cubilete.getDados().get(i)) == false){ //si el dado no esta apartado
+            if(!jugadorActual.getDadosApartados().contains(cubilete.getDados().get(i))){ //si el dado no esta apartado
                 cubilete.getDados().get(i).tirarse(); //le vuelvo a generar un numero sobre ese dado
                 dadosParciales.add(cubilete.getDados().get(i)); //y lo agrego a lista de dados parciales
             }
@@ -34,10 +34,10 @@ public class Lanzamientos implements Observable{
     public void iniciar_lanzamiento(){
         dadosParciales=new ArrayList<>();
         lanzar();
-        regla = new Reglas();
+        regla_juego = new ReglaJuego();
         regla_puntos= new ReglaPuntos();
-        regla.tieneDadosConPuntos(dadosParciales);
-        if(regla.tieneDadosConPuntos(dadosParciales) == false){
+        regla_juego.tieneDadosConPuntos(dadosParciales);
+        if(!regla_juego.tieneDadosConPuntos(dadosParciales)){
             notifyMessage("MOSTRAR DADOS PARCIALES"); //System.out.println(i + " . " + dadosParciales.get(i).getValorCaraSuperior());
             notifyMessage("NO TIENE DADOS CON PUNTOS");//System.out.println("Los dados lanzados no suman puntos. Su puntaje en esta ronda es 0");
             return;
@@ -58,15 +58,15 @@ public class Lanzamientos implements Observable{
             apartarDados();
             notifyMessage("MOSTRAR DADOS APARTADOS");
 
-            boolean eleccionValida = regla.verificar_si_puede_apartar(jugadorActual.getDadosApartados());
-            while(eleccionValida == false) {
+            boolean eleccionValida = regla_juego.verificar_si_puede_apartar(jugadorActual.getDadosApartados());
+            while(!eleccionValida) {
                 notifyMessage("NOTIFICAR DADOS A APARTAR INCORRECTOS");//System.out.println("No es posible apartar el/los dado/s, vuelva a ingresar la cantidad: ");
                 for (int i = jugadorActual.getDadosApartados().size() - 1; i >= cantidad; i--) {
                     jugadorActual.getDadosApartados().remove(i);
                 }
                 apartarDados();
 
-                eleccionValida = regla.verificar_si_puede_apartar(jugadorActual.getDadosApartados());
+                eleccionValida = regla_juego.verificar_si_puede_apartar(jugadorActual.getDadosApartados());
             }
             if(jugadorActual.getDadosApartados().size()==5){
                 int calculoPuntosParciales= regla_puntos.calcularPuntaje(jugadorActual.getDadosApartados()); //este calcula los puntos de los dados apartados una vez que relance.
@@ -86,10 +86,10 @@ public class Lanzamientos implements Observable{
 
             }
             lanzar();
-            regla.tieneDadosConPuntos(dadosParciales);
+            regla_juego.tieneDadosConPuntos(dadosParciales);
             notifyMessage("NOTIFICAR NUEVO LANZAMIENTO");//System.out.println("Nuevo lanzamiento: ");
             notifyMessage("MOSTRAR DADOS PARCIALES");
-            if(regla.tieneDadosConPuntos(dadosParciales) == false){
+            if(!regla_juego.tieneDadosConPuntos(dadosParciales)){
                 notifyMessage("NO TIENE DADOS CON PUNTOS");//System.out.println("Los dados lanzados no suman puntos. Su puntaje en esta ronda es 0");
                 jugadorActual.setPuntajeParcial(0);
                 jugadorActual.getDadosApartados().clear();
@@ -121,17 +121,16 @@ public class Lanzamientos implements Observable{
         return indices;
     }
 
-    public boolean validar_indices(){
+    private boolean validar_indices(){
         ArrayList<Dado> dadosIndices = new ArrayList<>();
-        for (int i = 0; i < indices.size(); i++) {
-            int indice_valor = indices.get(i);
+        for (int indice_valor : indices) {
             dadosIndices.add(dadosParciales.get(indice_valor));
         }
-        boolean tienePuntos = regla.tieneDadosConPuntos(dadosIndices);
-        boolean puedeApartar = regla.verificar_si_puede_apartar(dadosIndices);
+        boolean tienePuntos = regla_juego.tieneDadosConPuntos(dadosIndices);
+        boolean puedeApartar = regla_juego.verificar_si_puede_apartar(dadosIndices);
         if (tienePuntos && puedeApartar) {
-            for (int i = 0; i < indices.size(); i++) {
-                jugadorActual.getDadosApartados().add(dadosParciales.get(indices.get(i)));
+            for (Integer index : indices) {
+                jugadorActual.getDadosApartados().add(dadosParciales.get(index));
             }
             return true;
         }
@@ -141,9 +140,9 @@ public class Lanzamientos implements Observable{
     }
 
 
-    public void apartarDados(){
+    private void apartarDados(){
         boolean flag = false;
-        while(flag == false){
+        while(!flag){
             notifyMessage("INGRESAR CANTIDAD INDICES");
             flag = validar_indices();
 
